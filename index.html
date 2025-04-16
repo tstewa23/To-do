@@ -48,7 +48,7 @@
         setLists: function () {
             lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
             this.today = lists[0]
-            this.later = lists[1]
+            this.later = lists[1].sort()
             this.eventually = lists[2]
         },
 
