@@ -12,62 +12,26 @@
     <h1>Plan</h1>
     <h2>Today</h2>
     <ul class="today list">
-        <li>one</li>
+        <!-- filled by javscript -->
     </ul>
-    <h2>Later</h2>
-    <ul class="later list">
-        <li>one</li>
-    </ul>
-    <h2>Eventually</h2>
-    <ul class="eventually list">
-        <li>one</li>
-    </ul>
-    <h3>Add</h3>
+
     <form class="form">
         <label for="when">When</label>
         <input class="input" type="text">
-        <label for="when">What</label>
+        <label for="what">What</label>
         <input class="input" type="text">
         <input type="submit">
+
     </form>
-    <a href="doc.html"> click here </a>
+    <h1><a href="doc.html"> Temporary fill in </a></h1>
 </body>
 <script>
-    const storage = {
-
-        today: JSON.parse(localStorage.getItem('today')),
-
-        toLocal: function () {
-            localStorage.setItem('today', JSON.stringify(today))
-        },
-        toHTML: function (type) {
-            let html = ``
-            if (type === "today") {
-                this.today.forEach((entry) => {
-                    html += `when: ${entry[0]} what ${entry[1]}`
-                })
-            }
-            return html
-        },
-    };
-
-    const form = document.querySelector("form")
+    const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
         event.preventDefault()
-        const inputs = document.querySelectorAll("input")
-        let entry = []
-        inputs.forEach((input) => {
-            entry.push(input.value)
-            input.value = null
-        })
-        localStorage.setItem('today', JSON.stringify(entry))                 /// later called 'new'
-    })
-
-    const lists = document.querySelectorAll(".list")
-    lists.forEach((list) => {
-        if (list.classList.contains('today')) {
-            list.innerHTML = storage.toHTML('today')
-        }
+        const what = document.querySelector('.input').value
+        const list = document.querySelector('ul')
+        list.innerHTML += `<li><button></button>${what}</li>`
     })
 </script>
 
