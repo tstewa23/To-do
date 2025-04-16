@@ -54,10 +54,6 @@
 
         storeLocal: function () {
             const all = [this.today, this.later, this.eventually]
-            // let filtered = all.map((list) => {
-            //     list.filter(item => item !== null)
-            // })
-            console.log(`all: ${all}`)
             localStorage.setItem('lists', JSON.stringify(all))
         }
     }
@@ -80,8 +76,11 @@
     const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
         event.preventDefault()
+
         const when = document.querySelector('.when').value
+        document.querySelector('.when').value = ''
         const what = document.querySelector('.what').value
+        document.querySelector('.what').value = ''
 
         if (when == todate) {
             storage.today.push([when, what])
@@ -95,6 +94,13 @@
         storage.storeLocal()
         storage.setLists()
         updateHTML()
+    })
+
+    document.addEventListener('click', function (e) {
+        if (e.target.tagName === "BUTTON") {
+            p = e.target.parentElement
+            p.remove()
+        }
     })
 </script>
 
