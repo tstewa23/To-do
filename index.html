@@ -34,35 +34,48 @@
     <h1><a href="doc.html"> Temporary fill in </a></h1>
 </body>
 <script>
-    const today = new Date().toISOString().split('T')[0]
+    localStorage.clear()
+
+
+    const todate = new Date().toISOString().split('T')[0]
     let lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
     storage = {
 
-        today: [lists[0]],
-        later: [lists[1]],
-        eventually: [lists[2]],
+        today: lists[0] || [],
+        later: lists[1] || [],
+        eventually: lists[2] || [],
 
         setLists: function () {
             lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
-            this.today = [lists[0]]
-            this.later = [lists[1]]
-            this.eventually = [lists[2]]
+            this.today = lists[0]
+            this.later = lists[1]
+            this.eventually = lists[2]
         },
 
         storeLocal: function () {
             const all = [this.today, this.later, this.eventually]
-            let filtered = all.map((list) => {
-                list.filter(item => item !== null)
-            })
-            localStorage.setItem('lists', JSON.stringify(filtered))
+            // let filtered = all.map((list) => {
+            //     list.filter(item => item !== null)
+            // })
+            console.log(`all: ${all}`)
+            localStorage.setItem('lists', JSON.stringify(all))
         }
     }
 
-    const updateHTML = function (when, what, which) {
+    const post = function (what, which) {
         const list = document.querySelector(which)
-        list.innerHTML += `<li><button></button>   ${when}: ${what}</li>`
+        let insert = ``
+        what.forEach(element => {
+            insert += `<li><button></button> list: ${element}</li>`
+        });
+        list.innerHTML = insert
     };
 
+    const updateHTML = function () {
+        post(storage.today, '.today')
+        post(storage.later, '.later')
+        post(storage.eventually, '.eventually')
+    }
 
     const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
@@ -70,14 +83,14 @@
         const when = document.querySelector('.when').value
         const what = document.querySelector('.what').value
 
-        if (when == today) {
-            storage.today.push(`${when}: ${what}`)
+        if (when == todate) {
+            storage.today.push([when, what])
         }
         else if (when === '') {
-            storage.eventually.push(`${when}: ${what}`)
+            storage.eventually.push([when, what])
         }
         else {
-            storage.later.push(`${when}: ${what}`)
+            storage.later.push([when, what])
         }
         storage.storeLocal()
         storage.setLists()
