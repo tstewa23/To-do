@@ -37,15 +37,26 @@
     const today = new Date().toISOString().split('T')[0]
     let lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
     storage = {
+
         today: [lists[0]],
         later: [lists[1]],
         eventually: [lists[2]],
-    }
 
-    const storeHTML = function (when, what, which) {
-        which.push(`<li><button></button>   ${when}: ${what}</li>`)
-        console.log(which)
-    };
+        setLists: function () {
+            lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
+            this.today = [lists[0]]
+            this.later = [lists[1]]
+            this.eventually = [lists[2]]
+        },
+
+        storeLocal: function () {
+            const all = [this.today, this.later, this.eventually]
+            let filtered = all.map((list) => {
+                list.filter(item => item !== null)
+            })
+            localStorage.setItem('lists', JSON.stringify(filtered))
+        }
+    }
 
     const updateHTML = function (when, what, which) {
         const list = document.querySelector(which)
@@ -60,15 +71,17 @@
         const what = document.querySelector('.what').value
 
         if (when == today) {
-            storeHTML(when, what, storage.today)
+            storage.today.push(`${when}: ${what}`)
         }
         else if (when === '') {
-            storeHTML(when, what, storage.eventually)
+            storage.eventually.push(`${when}: ${what}`)
         }
         else {
-            storeHTML(when, what, storage.later)
+            storage.later.push(`${when}: ${what}`)
         }
-
+        storage.storeLocal()
+        storage.setLists()
+        updateHTML()
     })
 </script>
 
