@@ -35,6 +35,17 @@
 </body>
 <script>
     const today = new Date().toISOString().split('T')[0]
+    let lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
+    storage = {
+        today: [lists[0]],
+        later: [lists[1]],
+        eventually: [lists[2]],
+    }
+
+    const storeHTML = function (when, what, which) {
+        which.push(`<li><button></button>   ${when}: ${what}</li>`)
+        console.log(which)
+    };
 
     const updateHTML = function (when, what, which) {
         const list = document.querySelector(which)
@@ -49,13 +60,13 @@
         const what = document.querySelector('.what').value
 
         if (when == today) {
-            updateHTML(when, what, '.today')
+            storeHTML(when, what, storage.today)
         }
         else if (when === '') {
-            updateHTML(when, what, '.eventually')
+            storeHTML(when, what, storage.eventually)
         }
         else {
-            updateHTML(when, what, '.later')
+            storeHTML(when, what, storage.later)
         }
 
     })
