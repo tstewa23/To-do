@@ -11,27 +11,53 @@
 <body style="background-color: grey;">
     <h1>Plan</h1>
     <h2>Today</h2>
-    <ul class="today list">
+    <ul class="today">
+        <!-- filled by javscript -->
+    </ul>
+    <h2>Later</h2>
+    <ul class="later">
+        <!-- filled by javscript -->
+    </ul>
+    <h2>Eventually</h2>
+    <ul class="eventually">
         <!-- filled by javscript -->
     </ul>
 
     <form class="form">
         <label for="when">When</label>
-        <input class="input" type="text">
+        <input class="when" type="date">
         <label for="what">What</label>
-        <input class="input" type="text">
+        <input class="what" type="text">
         <input type="submit">
 
     </form>
     <h1><a href="doc.html"> Temporary fill in </a></h1>
 </body>
 <script>
+    const today = new Date().toISOString().split('T')[0]
+
+    const updateHTML = function (when, what, which) {
+        const list = document.querySelector(which)
+        list.innerHTML += `<li><button></button>   ${when}: ${what}</li>`
+    };
+
+
     const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
         event.preventDefault()
-        const what = document.querySelector('.input').value
-        const list = document.querySelector('ul')
-        list.innerHTML += `<li><button></button>${what}</li>`
+        const when = document.querySelector('.when').value
+        const what = document.querySelector('.what').value
+
+        if (when == today) {
+            updateHTML(when, what, '.today')
+        }
+        else if (when === '') {
+            updateHTML(when, what, '.eventually')
+        }
+        else {
+            updateHTML(when, what, '.later')
+        }
+
     })
 </script>
 
