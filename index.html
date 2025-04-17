@@ -8,29 +8,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-800 text-slate-300 text-xl">
-    <h1 class="text-5xl">Plan</h1>
-    <h2 class="text-3xl">Today</h2>
-    <ul class="today">
-        <!-- filled by javscript -->
-    </ul>
-    <h2 class="text-3xl">Later</h2>
-    <ul class="later">
-        <!-- filled by javscript -->
-    </ul>
-    <h2 class="text-3xl">Eventually</h2>
-    <ul class="eventually">
-        <!-- filled by javscript -->
-    </ul>
-
-    <form class="form">
-        <label for="when">When</label>
-        <input class="when" type="date">
-        <label for="what">What</label>
-        <input class="what" type="text">
-        <input type="submit">
+<body class="bg-gray-900 text-gray-200 text-xl p-4 flex flex-col min-h-screen justify-evenly">
+    <div class="flex items-center justify-center space-x-4">
+        <div class="flex-grow h-px bg-cyan-400"></div>
+        <h1 class="text-5xl font-bold text-slate-100">Plan</h1>
+        <div class="flex-grow h-px bg-cyan-400"></div>
+    </div>
+    <form class="form flex w-full overflow-auto">
+        <input class="when bg-gray-700 text-white placeholder-gray-400 p-2 rounded" type="date">
+        <!-- <input type="date" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+        <button type="button" class="bg-cyan-500 text-white px-4 py-2 rounded flex items-center">
+            📅
+        </button> -->
+        <input class="what bg-gray-700 text-white placeholder-gray-400 p-2 rounded" type="text"
+            placeholder="Add a task...">
+        <button class="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded text-white">Add</button>
 
     </form>
+    <section class="">
+        <h2 class="text-4xl font-bold">Today</h2>
+        <div class="h-px bg-cyan-400"></div>
+        <ul class="today">
+            <!-- filled by javscript -->
+        </ul>
+    </section>
+    <section>
+        <h2 class="text-4xl font-bold">Later</h2>
+        <div class="h-px bg-cyan-400"></div>
+        <ul class="later">
+            <!-- filled by javscript -->
+        </ul>
+    </section>
+    <section>
+        <h2 class="text-4xl font-bold">Eventually</h2>
+        <div class="h-px bg-cyan-400"></div>
+        <ul class="eventually">
+            <!-- filled by javscript -->
+        </ul>
+    </section>
 </body>
 <script>
 
@@ -42,7 +57,7 @@
         const list = document.querySelector(which)
         let insert = ``
         what.forEach(element => {
-            insert += `<li><div><button></button>${element[1]}</div>${element[0]}</li>`
+            insert += `<li><div><button class="w-3 h-3 bg-indigo-600 mr-3"></button>${element[1]}</div></li>`
         });
         list.innerHTML = insert
     };
@@ -77,7 +92,6 @@
     }
 
     if (localStorage.getItem('lists')) {
-        console.log(`hay`)
         setLists()
     }
 
@@ -98,11 +112,8 @@
 
     document.addEventListener('click', function (e) {
         if (e.target.tagName === "BUTTON") {
-            console.log('yo')
             p = e.target.parentElement
-            console.log(`lists == p.innerText: ${lists[0][1] === p.innerText}`)
             lists = lists.filter(inner => !(Array.isArray(inner) && inner.includes(p.innerText)))
-            console.log(`newList: ${lists}`)
             localStorage.setItem('lists', JSON.stringify(lists))
             setLists()
         }
