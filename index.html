@@ -34,10 +34,10 @@
     <h1><a href="doc.html"> Temporary fill in </a></h1>
 </body>
 <script>
-    localStorage.clear()
 
-
-    const todate = new Date().toISOString().split('T')[0]
+    const date = new Date()
+    const todate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    console.log(`todate: ${todate}`)
     let lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
     storage = {
 
@@ -62,7 +62,7 @@
         const list = document.querySelector(which)
         let insert = ``
         what.forEach(element => {
-            insert += `<li><button></button> list: ${element}</li>`
+            insert += `<li><div><button></button>${element[1]}</div>${element[0]}</li>`
         });
         list.innerHTML = insert
     };
@@ -73,11 +73,14 @@
         post(storage.eventually, '.eventually')
     }
 
+    updateHTML()
+
     const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
         event.preventDefault()
 
         const when = document.querySelector('.when').value
+        console.log(`when type: ${when}`)
         document.querySelector('.when').value = ''
         const what = document.querySelector('.what').value
         document.querySelector('.what').value = ''
@@ -99,7 +102,12 @@
     document.addEventListener('click', function (e) {
         if (e.target.tagName === "BUTTON") {
             p = e.target.parentElement
-            p.remove()
+            lists.forEach((sub, i) => {
+                lists[i] = sub.filter(inner => !(Array.isArray(inner) && inner.includes(p.innerText)));
+            });
+            localStorage.setItem('lists', JSON.stringify(lists))
+            storage.setLists()
+            updateHTML()
         }
     })
 </script>
