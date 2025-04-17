@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan</title>
-
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body style="background-color: grey;">
-    <h1>Plan</h1>
-    <h2>Today</h2>
+<body class="bg-slate-800 text-slate-300 text-xl">
+    <h1 class="text-5xl">Plan</h1>
+    <h2 class="text-3xl">Today</h2>
     <ul class="today">
         <!-- filled by javscript -->
     </ul>
-    <h2>Later</h2>
+    <h2 class="text-3xl">Later</h2>
     <ul class="later">
         <!-- filled by javscript -->
     </ul>
-    <h2>Eventually</h2>
+    <h2 class="text-3xl">Eventually</h2>
     <ul class="eventually">
         <!-- filled by javscript -->
     </ul>
@@ -31,32 +31,12 @@
         <input type="submit">
 
     </form>
-    <h1><a href="doc.html"> Temporary fill in </a></h1>
 </body>
 <script>
 
     const date = new Date()
     const todate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-    console.log(`todate: ${todate}`)
-    let lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
-    storage = {
-
-        today: lists[0] || [],
-        later: lists[1] || [],
-        eventually: lists[2] || [],
-
-        setLists: function () {
-            lists = JSON.parse(localStorage.getItem('lists')) || [, ,]
-            this.today = lists[0]
-            this.later = lists[1].sort()
-            this.eventually = lists[2]
-        },
-
-        storeLocal: function () {
-            const all = [this.today, this.later, this.eventually]
-            localStorage.setItem('lists', JSON.stringify(all))
-        }
-    }
+    let lists = []
 
     const post = function (what, which) {
         const list = document.querySelector(which)
@@ -67,47 +47,64 @@
         list.innerHTML = insert
     };
 
-    const updateHTML = function () {
-        post(storage.today, '.today')
-        post(storage.later, '.later')
-        post(storage.eventually, '.eventually')
+    const setLists = function () {
+
+        let today = []
+        let later = []
+        let eventually = []
+
+        lists = JSON.parse(localStorage.getItem('lists'))
+
+        lists.forEach((element) => {
+            const when = element[0]
+            const what = element[1]
+            if (when == todate) {
+                today.push([when, what])
+            }
+            else if (when === '') {
+                eventually.push([when, what])
+            }
+            else {
+                later.push([when, what])
+            }
+        })
+
+        later = later.sort()
+
+        post(today, '.today')
+        post(later, '.later')
+        post(eventually, '.eventually')
     }
 
-    updateHTML()
+    if (localStorage.getItem('lists')) {
+        console.log(`hay`)
+        setLists()
+    }
 
     const form = document.querySelector('form')
     form.addEventListener('submit', (event) => {
         event.preventDefault()
 
         const when = document.querySelector('.when').value
-        console.log(`when type: ${when}`)
         document.querySelector('.when').value = ''
         const what = document.querySelector('.what').value
         document.querySelector('.what').value = ''
 
-        if (when == todate) {
-            storage.today.push([when, what])
-        }
-        else if (when === '') {
-            storage.eventually.push([when, what])
-        }
-        else {
-            storage.later.push([when, what])
-        }
-        storage.storeLocal()
-        storage.setLists()
-        updateHTML()
+        lists.push([when, what])
+
+        localStorage.setItem('lists', JSON.stringify(lists))
+        setLists()
     })
 
     document.addEventListener('click', function (e) {
         if (e.target.tagName === "BUTTON") {
+            console.log('yo')
             p = e.target.parentElement
-            lists.forEach((sub, i) => {
-                lists[i] = sub.filter(inner => !(Array.isArray(inner) && inner.includes(p.innerText)));
-            });
+            console.log(`lists == p.innerText: ${lists[0][1] === p.innerText}`)
+            lists = lists.filter(inner => !(Array.isArray(inner) && inner.includes(p.innerText)))
+            console.log(`newList: ${lists}`)
             localStorage.setItem('lists', JSON.stringify(lists))
-            storage.setLists()
-            updateHTML()
+            setLists()
         }
     })
 </script>
