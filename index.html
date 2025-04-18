@@ -60,7 +60,7 @@
         const list = document.querySelector(which)
         let insert = ``
         what.forEach(element => {
-            insert += `<li><div><button class="w-3 h-3 bg-indigo-600 mr-3"></button>${element[1]}</div></li>`
+            insert += `<li><em><button class="w-3 h-3 bg-indigo-600 mr-3"></button>${element[1]}</em></li>`
         });
         list.innerHTML = insert
     };
